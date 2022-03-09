@@ -1,5 +1,4 @@
 
-from model import FundManager, MsFundBase, MsCategory, MsFundAnnual, MsFundPortfolio, MsFundReturn, MsFundRating, MsFundRank, query_fund
 import sys
 sys.path.append('../..')
 from utils import SpiderUtil
