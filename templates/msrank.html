@@ -1,0 +1,84 @@
+<style>
+    table { border-collapse: collapse; margin: 3px}
+    td.cat { background-color: #7fff00;}
+    tr.date { background-color: #fff8dc;}
+    td { border: 1px solid #999; padding: 5px;}
+    table thead {
+        background-color: #CCE8EB;
+        font-weight: bold;
+    }
+    td.score { background-color: #fff8dc; }
+    td.y3 { background-color: #fffaf0; }
+    td.y5 { background-color: #fffacd; }
+    td.y10 { background-color: #e0ffff; }
+    td.alpha { background-color: #98fb98; }
+    td.beta { background-color: #d8bfd8 }
+    td.r2 { background-color: #f0f8ff; }
+    thead td { text-align: center; }
+</style>
+{% for cat_name in data.df.groups.keys() %}
+<table>
+    <thead>
+        <tr>
+            <td colspan="5" class="cat">{{cat_name}}</td>
+            <td colspan="2">最差</td>
+            <td colspan="4">3年</td>
+            <td colspan="4">5年</td>
+            <td>alpha</td>
+            <td>beta</td>
+            <td>r2</td>
+            <td colspan="3">近期回报</td>
+        </tr>
+        <tr>
+            <td>代码</td>
+            <td>名称</td>
+            <td>规模(亿)</td>
+            <td>费用</td>
+            <td>基金经理</td>
+            <td>m3</td>
+            <td>m6</td>
+            <td class="y3">STD</td>
+            <td class="y3">风险</td>
+            <td class="y3">夏普</td>
+            <td class="y3">回报</td>
+            <td class="y5">STD</td>
+            <td class="y5">风险</td>
+            <td class="y5">夏普</td>
+            <td class="y5">回报</td>
+            <td class="alpha">指数</td>
+            <td class="beta">指数</td>
+            <td class="r2">指数</td>
+            <td>m1</td>
+            <td>m3</td>
+            <td>m6</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, fund in data.df.get_group(cat_name).iterrows() %}
+        <tr>
+            <td><a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a></td>
+            <td><a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{{ fund['fund_name'] }}</a></td>
+            <td>{{ fund['asset'] }}</td>
+            <td>{{ fund['fee'] }}%</td>
+            <td>{{ fund['managers'] }}</td>
+            <td>{{ fund['w3r'] }}</td>
+            <td>{{ fund['w6r'] }}</td>
+            <td class="y3">{{ fund['y3std'] }}</td>
+            <td class="y3">{{ fund['y3risk'] }}</td>
+            <td class="y3">{{ fund['y3sharp'] }}</td>
+            <td class="y3">{{ fund['y3r'] }}</td>
+            <td class="y5">{{ fund['y5std'] }}</td>
+            <td class="y5">{{ fund['y5risk'] }}</td>
+            <td class="y5">{{ fund['y5sharp'] }}</td>
+            <td class="y5">{{ fund['y5r'] }}</td>
+            <td class="alpha">{{ fund['alphai'] }}</td>
+            <td class="beta">{{ fund['betai'] }}</td>
+            <td class="r2">{{ fund['r2i'] }}</td>
+            <td>{{ fund['m1r'] }}</td>
+            <td>{{ fund['m3r'] }}</td>
+            <td>{{ fund['m6r'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}

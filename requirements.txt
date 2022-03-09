@@ -1,0 +1,7 @@
+pandas
+jinja2
+premailer
+pybeans>=1.7.0
+sqlalchemy
+mysql-connector-python
+fire

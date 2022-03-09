@@ -1,0 +1,25 @@
+version: "3"
+services:
+  msrank:
+    build: .
+    container_name: ana-msrank
+    volumes:
+      - /www/analyzer:/app
+    logging:
+      options:
+        max-size: "10m"
+    working_dir: /app
+    environment:
+      - ENV=${ENV}
+      - MSRANK_SMTP_PWD=${SMTP_PWD}
+      - MSRANK_DINGTALK_TOKEN=${DINGTALK_TOKEN}
+      - MSRANK_DINGTALK_SECRET=${DINGTALK_SECRET}
+      - MSRANK_MYSQL_USER=${MYSQL_USER}
+      - MSRANK_MYSQL_DB=${MYSQL_DB}
+      - MSRANK_MYSQL_PWD=${MYSQL_PWD}
+    networks:
+      - ana
+    command: python main.py msrank
+
+networks: 
+  ana:
