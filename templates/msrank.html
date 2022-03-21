@@ -15,6 +15,8 @@
     td.beta { background-color: #d8bfd8 }
     td.r2 { background-color: #f0f8ff; }
     thead td { text-align: center; }
+    td.name { width: 200px;}
+    td.manager { width: 120px;}
 </style>
 {% for cat_name in data.df.groups.keys() %}
 <table>
@@ -31,10 +33,10 @@
         </tr>
         <tr>
             <td>代码</td>
-            <td>名称</td>
+            <td class="name">名称</td>
             <td>规模(亿)</td>
-            <td>管理托管费</td>
-            <td>基金经理</td>
+            <td>管托费</td>
+            <td class="manager">基金经理</td>
             <td>m3</td>
             <td>m6</td>
             <td class="y3">STD</td>
