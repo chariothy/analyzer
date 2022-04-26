@@ -147,9 +147,9 @@ def report_top_rank():
     )
     template = tmp_env.get_template('msrank.html')
     html = template.render({'data': data})
-    au.D(html)
+    #au.D(html)
     html = transform(html)
-    #au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html)
+    au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html)
     
 
 if __name__ == "__main__":
