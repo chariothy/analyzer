@@ -22,7 +22,7 @@
 <table>
     <thead>
         <tr>
-            <td colspan="5" class="cat">{{cat_name}}</td>
+            <td colspan="7" class="cat">{{cat_name}}</td>
             <td colspan="2">最差</td>
             <td colspan="4">3年</td>
             <td colspan="4">5年</td>
@@ -36,6 +36,8 @@
             <td class="name">名称</td>
             <td>规模(亿)</td>
             <td>管托费</td>
+            <td>免费期</td>
+            <td>股票/债券/现金/其它 %</td>
             <td class="manager">基金经理</td>
             <td>m3</td>
             <td>m6</td>
@@ -50,9 +52,9 @@
             <td class="alpha">指数</td>
             <td class="beta">指数</td>
             <td class="r2">指数</td>
-            <td>m1</td>
             <td>m3</td>
             <td>m6</td>
+            <td>y1</td>
         </tr>
     </thead>
     <tbody>
@@ -62,6 +64,10 @@
             <td><a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a></td>
             <td>{{ fund['asset'] }}</td>
             <td>{{ fund['fee'] }}%</td>
+            <td>{{ fund['free_at'] }}{{ fund['free_at'] | free }}</td>
+            <td>{{ fund['stock_p'] }} / {{ fund['bond_p'] }} / {{ fund['cash_p'] }} / {{ fund['stock_p'] }} <br>
+                *10股票{{ fund['top_stockw'] }} / *10债券{{ fund['top_bondw'] }}
+            </td>
             <td>{{ fund['managers'] }}</td>
             <td>{{ fund['w3r'] }}</td>
             <td>{{ fund['w6r'] }}</td>
@@ -76,9 +82,9 @@
             <td class="alpha">{{ fund['alphai'] }}</td>
             <td class="beta">{{ fund['betai'] }}</td>
             <td class="r2">{{ fund['r2i'] }}</td>
-            <td>{{ fund['m1r'] }}</td>
             <td>{{ fund['m3r'] }}</td>
             <td>{{ fund['m6r'] }}</td>
+            <td>{{ fund['y1r'] }}</td>
         </tr>
         {% endfor %}
     </tbody>

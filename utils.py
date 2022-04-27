@@ -19,6 +19,7 @@ def my_finalize(thing):
         return thing
 from jinja2 import Environment, FileSystemLoader
 tmp_env = Environment(loader=FileSystemLoader(os.getcwd() + '/templates'), finalize=my_finalize)
+tmp_env.filters['free'] = lambda val: '年' if float(val) < 4 else '天'
 
 class AnalyzerUtil(AppTool):
     """
@@ -59,3 +60,6 @@ class AnalyzerUtil(AppTool):
         
     def env(self):
         return os.environ.get('ENV')
+    
+    def is_prod(self):
+        return self.env() == 'prod'

@@ -1,5 +1,5 @@
 APP_NAME = 'msrank'
-import imp
+from os import path
 from utils import AnalyzerUtil, tmp_env
 au = AnalyzerUtil(APP_NAME)
 
@@ -52,7 +52,7 @@ SELECT b.code AS code, b.name AS fund_name, c.name AS cat_name, c.banchmark AS b
 , e.m1_return AS m1r, e.m3_return AS m3r, e.m6_return AS m6r
 , e.ytd_return AS ytdr, e.y1_return AS y1r, e.y2_return AS y2r, e.y3_return AS y3r, e.y5_return AS y5r
 , e.return_date AS return_date
-, e.asset AS asset, p.cash_p AS cash_p, p.stock_p AS stock_p, p.bond_p AS bond_p, p.other_p AS other_p, p.top_stock_w AS top_stockw, p.portfolio_date AS portfo_date 
+, e.asset AS asset, p.cash_p AS cash_p, p.stock_p AS stock_p, p.bond_p AS bond_p, p.other_p AS other_p, p.top_stock_w AS top_stockw, p.top_bond_w AS top_bondw, p.portfolio_date AS portfo_date 
 , m.managers
 FROM spd_ms_category c, spd_ms_fund_base b, spd_ms_fund_rating r, spd_ms_fund_return e, spd_ms_fund_portfolio p
 , (SELECT b.code AS CODE, GROUP_CONCAT(CONCAT(jt.manager, ' (', during,')') SEPARATOR ', ') AS managers
@@ -103,7 +103,7 @@ def export_fund(df:DataFrame, folder='./logs'):
 def rank_fund(df:DataFrame):
     # 算法：
     # 思想：长期表现优秀的基金，如果在最近表现偏弱，则其均值回归的概率更大
-    # 将5年夏普值降序，5年标准差升序，6个月最差收益降序，进行综合排名
+    # 将5年夏普值降序，5年标准差升序，（删除）6个月最差收益降序，进行综合排名
     # 选出每类中的前8名，再将这8名按最近6个月收益值升序排序
     # 高sharp 低std 高alpha 高远5t/近6m收益 低费率 低asset
     cate_array = df['cat_name'].unique()
@@ -127,19 +127,18 @@ def rank_fund(df:DataFrame):
             
         ret_date = cat_df.iloc[0].return_date.strftime('%Y%m%d')
         rat_date = cat_df.iloc[0].rating_date.strftime('%Y%m%d')
-        top_cat_df = cat_df.head(TOP).sort_values(by=['m6r'])
+        top_cat_df = cat_df.sort_values(by=['fund_rank5']).head(TOP)
         top_funds.append(top_cat_df)
 
     all_top_funds = pd.concat(top_funds)
-    #all_top_funds.to_csv(f'c:/temp/fund/all_top_funds_{ret_date}_{rat_date}.csv', encoding='utf_8_sig')
-    #export_fund(all_top_funds)
     return all_top_funds
 
 
 def report_top_rank():
     top_fund_df = query_fund()
     rank_fund_df = rank_fund(top_fund_df)
-    au.D(rank_fund_df)
+    if not au.is_prod():
+        au.D(rank_fund_df)
     rank_fund_group_df = rank_fund_df.groupby('cat_name')
     #au.D(rank_fund_group_df.groups.keys())
     data = dict(
@@ -147,9 +146,12 @@ def report_top_rank():
     )
     template = tmp_env.get_template('msrank.html')
     html = template.render({'data': data})
-    #au.D(html)
     html = transform(html)
-    au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html)
+    if au.is_prod():
+        au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html)
+    else:
+        with open(path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}.html'), mode='w') as f:
+            f.write(html)
     
 
 if __name__ == "__main__":
