@@ -21,6 +21,14 @@ from jinja2 import Environment, FileSystemLoader
 tmp_env = Environment(loader=FileSystemLoader(os.getcwd() + '/templates'), finalize=my_finalize)
 tmp_env.filters['free'] = lambda val: '年' if float(val) < 4 else '天'
 
+def stock_vs_bond_cash(fund):
+    bond_cash = fund['bond_p'] + fund['cash_p']
+    if bond_cash == 0.0:
+        return '全股票'
+    else:
+        return fund['stock_p'] / bond_cash
+tmp_env.filters['stock_vs_bond_cash'] = stock_vs_bond_cash
+
 class AnalyzerUtil(AppTool):
     """
     蜘蛛公用代码

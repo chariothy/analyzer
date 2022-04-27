@@ -65,8 +65,9 @@
             <td>{{ fund['asset'] }}</td>
             <td>{{ fund['fee'] }}%</td>
             <td>{{ fund['free_at'] }}{{ fund['free_at'] | free }}</td>
-            <td>{{ fund['stock_p'] }} / {{ fund['bond_p'] }} / {{ fund['cash_p'] }} / {{ fund['stock_p'] }} <br>
-                *10股票{{ fund['top_stockw'] }} / *10债券{{ fund['top_bondw'] }}
+            <td>{{ fund['stock_p'] }} / {{ fund['bond_p'] }} / {{ fund['cash_p'] }} / {{ fund['other_p'] }} <br>
+                *10股票{{ fund['top_stockw'] }} / *10债券{{ fund['top_bondw'] }} <br>
+                股票÷(债券+现金) = {{ fund | stock_vs_bond_cash }}
             </td>
             <td>{{ fund['managers'] }}</td>
             <td>{{ fund['w3r'] }}</td>
