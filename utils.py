@@ -21,13 +21,42 @@ from jinja2 import Environment, FileSystemLoader
 tmp_env = Environment(loader=FileSystemLoader(os.getcwd() + '/templates'), finalize=my_finalize)
 tmp_env.filters['free'] = lambda val: '年' if float(val) < 4 else '天'
 
-def stock_vs_bond_cash(fund):
-    bond_cash = fund['bond_p'] + fund['cash_p']
-    if bond_cash == 0.0:
-        return '全股票'
+def val(x):
+    color = 'red' if x <= 0 else 'black'
+    return f'<span style="color: {color}">{round(x,2)}</span>'
+tmp_env.filters['val'] = val
+
+def sharp(x):
+    color = 'blue' if x > 1 else 'black'
+    return f'<span style="color: {color}">{round(x,2)}</span>'
+tmp_env.filters['sharp'] = sharp
+
+def rating(r):
+    r = int(r)
+    return (r * '★').ljust(5, '☆')
+tmp_env.filters['rating'] = rating
+
+def split(s):
+    if s:
+        return '<br>'.join(map(lambda s: '- '+s, s.split(',')))
     else:
-        return fund['stock_p'] / bond_cash
-tmp_env.filters['stock_vs_bond_cash'] = stock_vs_bond_cash
+        return ''
+tmp_env.filters['split'] = split
+
+def industry(fund):
+    s = ''
+    if fund['stock'] >= fund['bond']:
+        bond_cash = fund['bond'] + fund['cash']
+        if bond_cash < 0.01:
+            s1 = '全股票'
+        else:
+            s1 = round(fund['stock'] / bond_cash, 2)
+        s += f'<span class="stock-ratio">〓股票÷(债券+现金) = {s1}</span>'
+        s += f'<br><span class="top-stock">{split(fund["top_stock"])}</span>'
+    else:
+        s += f'<span class="top-bond">{split(fund["top_bond"])}</span>'
+    return s
+tmp_env.filters['industry'] = industry
 
 class AnalyzerUtil(AppTool):
     """
