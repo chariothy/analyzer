@@ -16,6 +16,7 @@
     td.r2 { background-color: #f0f8ff; }
     thead td { text-align: center; }
     span.top-stock { color:blue;}
+    span.rank { color:blue;}
     span.industry { color:brown;}
     span.stock-ratio { color:red;}
     span.top-bond { color:brown;}
@@ -69,14 +70,14 @@
             <td class="y3">{{ fund['y3std'] }}</td>
             <td class="y3">{{ fund['y3risk'] }}<br><span style="font-size: 1px;">{{ fund['y3riskr'] | rating }}</span></td>
             <td class="y3">{{ fund['y3sharp'] | sharp }}<br><span style="font-size: 1px;">{{ fund['y3msr'] | rating }}</span></td>
-            <td class="y3">{{ fund['y3r'] }}</td>
+            <td class="y3">{{ fund['y3r'] }} <br><span class="rank">{{ fund['y3rank'] | int }}/{{ fund['y3size'] | int }}</span></td>
             <td class="y5">{{ fund['y5std'] }}</td>
             <td class="y5">{{ fund['y5risk'] }}<br><span style="font-size: 1px;">{{ fund['y5riskr'] | rating }}</span></td>
             <td class="y5">{{ fund['y5sharp'] | sharp }}<br><span style="font-size: 1px;">{{ fund['y5msr'] | rating }}</span></td>
-            <td class="y5">{{ fund['y5r'] }}</td>
+            <td class="y5">{{ fund['y5r'] }} <br><span class="rank">{{ fund['y5rank'] | int }}/{{ fund['y5size'] | int }}</span></td>
             <td>{{ fund['m3r'] | val }}</td>
             <td>{{ fund['m6r'] | val }}</td>
-            <td>{{ fund['y1r'] | val }}</td>
+            <td>{{ fund['y1r'] | val }}<br><span class="rank">{{ fund['y1rank'] | int }}/{{ fund['y1size'] | int }}</span></td>
         </tr>
         {% endfor %}
     </tbody>
