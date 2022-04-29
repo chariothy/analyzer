@@ -168,8 +168,11 @@ def report_top_rank():
     if au.is_prod():
         au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html)
     else:
-        with open(path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}.html'), mode='w') as f:
+        html_path = path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}.html')
+        with open(html_path, mode='w') as f:
             f.write(html)
+        import webbrowser
+        webbrowser.open(html_path)
     
 
 if __name__ == "__main__":
