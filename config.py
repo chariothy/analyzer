@@ -37,5 +37,6 @@ CONFIG = {
     'dingtalk': {                       # 通过钉钉机器人发送通知，具体请见钉钉机器人文档
         'token': 'DINGTALK_BOT_TOKEN',
         'secret' : 'DINGTALK_BOT_SECRET' # 钉钉机器人的三种验证方式之一为密钥验证
-    }
+    },
+    'report_to': 'Henry TIAN <6314849@qq.com>'
 }

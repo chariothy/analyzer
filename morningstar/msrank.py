@@ -168,7 +168,7 @@ def report_top_rank():
     html = template.render({'data': data})
     html = transform(html)
     if au.is_prod():
-        au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html)
+        au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html, to_addrs=au['report_to'])
     else:
         html_path = path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}.html')
         with open(html_path, mode='w') as f:
