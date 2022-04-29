@@ -28,7 +28,7 @@
             <td colspan="7" class="cat">{{cat_name}}</td>
             <td colspan="4">3年</td>
             <td colspan="4">5年</td>
-            <td colspan="3">近期回报</td>
+            <td colspan="4">近期回报</td>
         </tr>
         <tr>
             <td>代码</td>
@@ -46,6 +46,7 @@
             <td class="y5">风险</td>
             <td class="y5">夏普</td>
             <td class="y5">回报</td>
+            <td>m1</td>
             <td>m3</td>
             <td>m6</td>
             <td>y1</td>
@@ -75,6 +76,7 @@
             <td class="y5">{{ fund['y5risk'] }}<br><span style="font-size: 1px;">{{ fund['y5riskr'] | rating }}</span></td>
             <td class="y5">{{ fund['y5sharp'] | sharp }}<br><span style="font-size: 1px;">{{ fund['y5msr'] | rating }}</span></td>
             <td class="y5">{{ fund['y5r'] }} <br><span class="rank">{{ fund['y5rank'] | int }}/{{ fund['y5size'] | int }}</span></td>
+            <td>{{ fund['m1r'] | val }}<br>{{ fund['m1c'] | updown }}</td>
             <td>{{ fund['m3r'] | val }}</td>
             <td>{{ fund['m6r'] | val }}</td>
             <td>{{ fund['y1r'] | val }}<br><span class="rank">{{ fund['y1rank'] | int }}/{{ fund['y1size'] | int }}</span></td>

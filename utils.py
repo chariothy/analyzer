@@ -43,6 +43,13 @@ def split(s):
         return ''
 tmp_env.filters['split'] = split
 
+def updown(x):
+    color = 'blue' if x > 0 else 'red'
+    sig = '↑' if x > 0 else '↓'
+    return f'<span style="color: {color}">{sig} {round(x, 2)} </span>'
+tmp_env.filters['updown'] = updown
+
+
 def industry(fund):
     s = ''
     if fund['stock'] >= fund['bond']:

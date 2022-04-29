@@ -46,7 +46,7 @@ SELECT code, name AS fund_name, cat_name, banchmark, class_id, reg_date, favorit
 , y3_risk_rating AS y3riskr, y5_risk_rating AS y5riskr
 , y3_ms_rating AS y3msr, y5_ms_rating AS y5msr, y3_ms_risk AS y3risk, y5_ms_risk AS y5risk
 , y3_std AS y3std, y5_std AS y5std, y3_sharp AS y3sharp, y5_sharp AS y5sharp, rating_date
-, nm1_return AS m1r, m3_return AS m3r, m6_return AS m6r, ytd_return AS ytdr, y2_return AS y2r
+, nm1_return AS m1r, nm1_cat as m1c, m3_return AS m3r, m6_return AS m6r, ytd_return AS ytdr, y2_return AS y2r
 , y1_return AS y1r, y1_cat_size AS y1size, y1_cat_rank AS y1rank
 , y3_return AS y3r, y3_cat_size AS y3size, y3_cat_rank AS y3rank
 , y5_return AS y5r, y5_cat_size AS y5size, y5_cat_rank AS y5rank, return_date
