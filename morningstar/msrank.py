@@ -83,25 +83,25 @@ FROM v_latest_fund
     def sector(s):
         if not s: return s
         else:
-            iter_keep_major = filter(lambda s: s['NetAssetWeight']>1, sorted(json.loads(s), key=lambda s: s['NetAssetWeight'], reverse=True))
+            iter_kept_major = filter(lambda s: s['NetAssetWeight']>1, sorted(json.loads(s), key=lambda s: s['NetAssetWeight'], reverse=True))
             shrink_industry = lambda s: s if len(s) <= 10 else f'{s[:8]}...'
-            iter_formatted = map(lambda s: f"{shrink_industry(s['IndustryName'])} {s['NetAssetWeight']} / {s['CatAvgWeight']}", list(iter_keep_major)[:3])
+            iter_formatted = map(lambda s: f"{shrink_industry(s['IndustryName'])} {s['NetAssetWeight']} / {s['CatAvgWeight']}", list(iter_kept_major)[:3])
             return ', '.join(iter_formatted)
     df_fund.industry_sector = df_fund.industry_sector.apply(sector)
     
     def stock(s):
         if not s: return s
         else:
-            iter_keep_major = filter(lambda s: s['Percent']>1, sorted(json.loads(s), key=lambda s: s['Percent'], reverse=True))
-            iter_formatted = map(lambda s: f"{s['HoldingName']} {s['Percent']}", list(iter_keep_major)[:3])
+            iter_kept_major = filter(lambda s: s['Percent']>1, sorted(json.loads(s), key=lambda s: s['Percent'], reverse=True))
+            iter_formatted = map(lambda s: f"{s['HoldingName']} {s['Percent']}", list(iter_kept_major)[:3])
             return ', '.join(iter_formatted)
     df_fund.top_stock = df_fund.top_stock.apply(stock)
     
     def bond(s):
         if not s: return s
         else:
-            iter_keep_major = filter(lambda s: s['Percent']>1, sorted(json.loads(s), key=lambda s: s['Percent'], reverse=True))
-            iter_formatted = map(lambda s: f"{s['HoldingName']}: {s['Percent']}", list(iter_keep_major)[:3])
+            iter_kept_major = filter(lambda s: s['Percent']>1, sorted(json.loads(s), key=lambda s: s['Percent'], reverse=True))
+            iter_formatted = map(lambda s: f"{s['HoldingName']}: {s['Percent']}", list(iter_kept_major)[:3])
             return ', '.join(iter_formatted)
     df_fund.top_bond = df_fund.top_bond.apply(bond)
 
