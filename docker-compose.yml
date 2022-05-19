@@ -19,7 +19,7 @@ services:
       - MSRANK_MYSQL_PWD=${MYSQL_PWD}
     networks:
       - ana
-    command: python main.py msrank
+    command: python main.py report_top_fund
 
 networks: 
   ana:

@@ -154,7 +154,7 @@ def rank_fund(df:DataFrame):
     return all_top_funds
 
 
-def report_top_rank():
+def report_top_fund():
     top_fund_df = query_fund()
     rank_fund_df = rank_fund(top_fund_df)
     if not au.is_prod():
@@ -178,4 +178,4 @@ def report_top_rank():
     
 
 if __name__ == "__main__":
-    report_top_rank()
+    report_top_fund()
