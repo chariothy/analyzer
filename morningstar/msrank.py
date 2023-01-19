@@ -1,5 +1,4 @@
 APP_NAME = 'msrank'
-import imp
 from os import path
 from utils import AnalyzerUtil, tmp_env
 au = AnalyzerUtil(APP_NAME)
@@ -8,6 +7,7 @@ from premailer import transform
 import pandas as pd
 from pandas import DataFrame
 from pybeans import utils as pu
+from datetime import timedelta
 
 import json
 
@@ -138,6 +138,12 @@ def rank_fund(df:DataFrame):
     )
     for cat_name in cate_array:
         cat_df = df[df.cat_name==cat_name].copy()
+        cat_df = cat_df.sort_values(by=['return_date'], ascending=False)
+        last_ret_date = cat_df.iloc[0].return_date.to_pydatetime()
+        min_ret_date = last_ret_date - timedelta(days=61)
+        cat_df = cat_df[cat_df.return_date >= min_ret_date]
+        #cat_df.return_date.describe()
+
         cat_df['fund_rank5'] = 0
         for col in rank_conditions:
             condition = rank_conditions[col]
@@ -145,8 +151,6 @@ def rank_fund(df:DataFrame):
             cat_df[percentile] = cat_df[col].rank(method='min', ascending=condition['asc'])
             cat_df['fund_rank5'] += cat_df[percentile] * condition['weight']
             
-        ret_date = cat_df.iloc[0].return_date.strftime('%Y%m%d')
-        rat_date = cat_df.iloc[0].rating_date.strftime('%Y%m%d')
         top_cat_df = cat_df.sort_values(by=['fund_rank5']).head(TOP)
         top_funds.append(top_cat_df)
 
