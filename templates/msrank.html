@@ -55,7 +55,11 @@
     <tbody>
         {% for index, fund in data.df.get_group(cat_name).iterrows() %}
         <tr>
-            <td><a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a></td>
+            <td>
+                <a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a>
+                <br>
+                {{ fund['return_date'] }}
+            </td>
             <td>
                 <a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a>
                 <br>
