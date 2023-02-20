@@ -50,7 +50,7 @@ SELECT code, name AS fund_name, cat_name, banchmark, class_id, reg_date, favorit
 , y1_return AS y1r, y1_cat_size AS y1size, y1_cat_rank AS y1rank
 , y3_return AS y3r, y3_cat_size AS y3size, y3_cat_rank AS y3rank
 , y5_return AS y5r, y5_cat_size AS y5size, y5_cat_rank AS y5rank, return_date
-, asset, cash_p AS cash, stock_p AS stock, bond_p AS bond, other_p AS other
+, npv, asset, cash_p AS cash, stock_p AS stock, bond_p AS bond, other_p AS other
 , top_stock_w AS top_stockw, top_bond_w AS top_bondw, portfolio_date AS portfo_date 
 , manager, top10_stock AS top_stock, top5_bond AS top_bond, industry_sector
 FROM v_latest_fund
@@ -161,24 +161,32 @@ def rank_fund(df:DataFrame):
 def report_top_fund():
     top_fund_df = query_fund()
     rank_fund_df = rank_fund(top_fund_df)
-    if not au.is_prod():
-        au.D(rank_fund_df)
-    rank_fund_group_df = rank_fund_df.groupby('cat_name')
-    #au.D(rank_fund_group_df.groups.keys())
-    data = dict(
-        df = rank_fund_group_df
-    )
-    template = tmp_env.get_template('msrank.html')
-    html = template.render({'data': data})
-    html = transform(html)
-    if au.is_prod():
-        au.send_email(f'最新TOP{TOP}基金报告({au.env()})', html_body=html, to_addrs=au['report_to'])
-    else:
-        html_path = path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}.html')
-        with open(html_path, mode='w') as f:
-            f.write(html)
-        import webbrowser
-        webbrowser.open(html_path)
+    types = ['stock', 'bond']
+    for type in types:
+        if type == 'stock':
+            rank_fund_df_type = rank_fund_df[rank_fund_df.stock > rank_fund_df.bond]
+            title = f'最新TOP{TOP}偏股型基金报告({au.env()})'
+        else:
+            rank_fund_df_type = rank_fund_df[rank_fund_df.stock <= rank_fund_df.bond]
+            title = f'最新TOP{TOP}偏债型及其他基金报告({au.env()})'
+        if not au.is_prod():
+            au.D(rank_fund_df_type)
+        rank_fund_group_df = rank_fund_df_type.groupby(['cat_name', 'banchmark'])
+        #au.D(rank_fund_group_df.groups.keys())
+        data = dict(
+            df = rank_fund_group_df
+        )
+        template = tmp_env.get_template('msrank.html')
+        html = template.render({'data': data})
+        html = transform(html)
+        if au.is_prod():
+            au.send_email(title, html_body=html, to_addrs=au['report_to'])
+        else:
+            html_path = path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}-{type}.html')
+            with open(html_path, mode='w') as f:
+                f.write(html)
+            import webbrowser
+            webbrowser.open(html_path)
     
 
 if __name__ == "__main__":
