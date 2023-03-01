@@ -5,6 +5,7 @@ services:
     container_name: ana-msrank
     volumes:
       - /www/analyzer:/app
+      - /www/public:/www
     logging:
       options:
         max-size: "10m"

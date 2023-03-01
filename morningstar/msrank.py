@@ -181,6 +181,9 @@ def report_top_fund():
         html = transform(html)
         if au.is_prod():
             au.send_email(title, html_body=html, to_addrs=au['report_to'])
+            html_path = path.join('/www',f'fund-latest-{type}.html')
+            with open(html_path, mode='w') as f:
+                f.write(html)
         else:
             html_path = path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}-{type}.html')
             with open(html_path, mode='w') as f:
