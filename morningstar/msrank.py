@@ -178,9 +178,8 @@ def report_top_fund():
         )
         template = tmp_env.get_template('msrank.html')
         html = template.render({'data': data})
-        html = transform(html)
         if au.is_prod():
-            au.send_email(title, html_body=html, to_addrs=au['report_to'])
+            au.send_email(title, html_body=transform(html), to_addrs=au['report_to'])
             html_path = path.join('/www',f'fund-latest-{type}.html')
             with open(html_path, mode='w') as f:
                 f.write(html)
