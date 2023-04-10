@@ -42,6 +42,8 @@ class FundManager(Base):
     
     
 def query_fund(session, filter_by=None, rating_date:str=None, return_date:str=None, portfolio_date:str=None):
+    '''Deprecated
+    '''
     if not rating_date:
         rating_date = session.query(func.max(MsFundRating.rating_date))
     if not return_date:
