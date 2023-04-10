@@ -163,7 +163,7 @@ def rank_fund(df:DataFrame):
     return all_top_funds
 
 
-def report_top_fund(rank_fund_df: DataFrame):
+def report_top_fund(rank_fund_df: DataFrame=None):
     if rank_fund_df is None:
         top_fund_df = query_fund()
         rank_fund_df = rank_fund(top_fund_df)
