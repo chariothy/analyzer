@@ -1,4 +1,4 @@
-APP_NAME = 'msrank'
+APP_NAME = 'mschange'
 from os import path
 from utils import AnalyzerUtil, tmp_env
 au = AnalyzerUtil(APP_NAME)
