@@ -9,7 +9,7 @@ CONFIG = {
             'file': None,   # None: disabled, 
                                         # PATH: log file path, 
                                         # '': Default path under ./logs/
-            'syslog': ('10.8.0.2', 514),    # None: disabled, or (ip, port)
+            'syslog': ('10.8.9.2', 514),    # None: disabled, or (ip, port)
             'mail': 'Henry TIAN <6314849@qq.com>'   # None: disabled,
                                                     # MAIL: send to
                                                     # '': use setting ['mail']['to']
