@@ -14,6 +14,7 @@
     td.alpha { background-color: #98fb98; }
     td.beta { background-color: #d8bfd8 }
     td.r2 { background-color: #f0f8ff; }
+    td.inline { border-top: dotted; }
     thead td { text-align: center; }
     span.top-stock { color:blue;}
     span.rank { color:blue;}
@@ -25,65 +26,73 @@
 <table>
     <thead>
         <tr>
-            <td colspan="7" class="cat">{{cat_name}} / {{banchmark}}</td>
-            <td colspan="4">3年</td>
-            <td colspan="4">5年</td>
-            <td colspan="4">近期回报</td>
+            <td colspan="4" class="cat">{{cat_name}} / {{banchmark}}</td>
+            <td colspan="4">3年/5年 评级</td>
+            <td colspan="2">近期回报(同类比较)</td>
         </tr>
         <tr>
             <td>代码</td>
             <td class="name">名称</td>
-            <td>规模(亿)</td>
-            <td>管托费</td>
-            <td>免费期</td>
+            <td>规模费用</td>
             <td>股票/债券/现金/其它(%)</td>
-            <td class="manager">基金经理</td>
-            <td class="y3">STD</td>
-            <td class="y3">风险</td>
-            <td class="y3">夏普</td>
-            <td class="y3">回报</td>
-            <td class="y5">STD</td>
-            <td class="y5">风险</td>
-            <td class="y5">夏普</td>
-            <td class="y5">回报</td>
-            <td>m1</td>
-            <td>m3</td>
-            <td>m6</td>
-            <td>y1</td>
+            <td>STD</td>
+            <td>风险</td>
+            <td>夏普</td>
+            <td>回报(排名)</td>
+            <td>m1/m6</td>
+            <td>m3/y1</td>
         </tr>
     </thead>
     <tbody>
         {% for index, fund in data.df.get_group((cat_name, banchmark)).iterrows() %}
         <tr>
-            <td>
+            <td rowspan="2">
                 <a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a>
                 <br>
                 {{ fund['return_date'].strftime('%Y-%m-%d') }}
+                <br>
+                {{ fund['manager'] | split }}
             </td>
-            <td>
+            <td rowspan="2">
                 <a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a>
                 <br>
                 <span class="industry">{{ fund['industry_sector'] | split }}</span>
             </td>
-            <td>{{ fund['asset'] }}</td>
-            <td>{{ fund['fee'] }}%</td>
-            <td>{{ fund['free_at'] }}{{ fund['free_at'] | free }}</td>
-            <td>股票 {{ fund['stock'] }} / 债券 {{ fund['bond'] }} <br>现金 {{ fund['cash'] }} / 其它 {{ fund['other'] }} <br>
+            <td rowspan="2">{{ fund['asset'] }}亿
+                <br>
+                {{ fund['fee'] }}%
+                <br>
+                {{ fund['free_at'] }}{{ fund['free_at'] | free }}免费
+            </td>
+            <td rowspan="2">股票 {{ fund['stock'] }} / 债券 {{ fund['bond'] }} <br>现金 {{ fund['cash'] }} / 其它 {{ fund['other'] }} <br>
                 {{ fund | industry }}
             </td>
-            <td>{{ fund['manager'] | split }}</td>
             <td class="y3">{{ fund['y3std'] }}</td>
-            <td class="y3">{{ fund['y3risk'] }}<br><span style="font-size: 1px;">{{ fund['y3riskr'] | rating }}</span></td>
-            <td class="y3">{{ fund['y3sharp'] | sharp }}<br><span style="font-size: 1px;">{{ fund['y3msr'] | rating }}</span></td>
-            <td class="y3">{{ fund['y3r'] }} <br><span class="rank">{{ fund['y3rank'] | int }}/{{ fund['y3size'] | int }}</span></td>
-            <td class="y5">{{ fund['y5std'] }}</td>
-            <td class="y5">{{ fund['y5risk'] }}<br><span style="font-size: 1px;">{{ fund['y5riskr'] | rating }}</span></td>
-            <td class="y5">{{ fund['y5sharp'] | sharp }}<br><span style="font-size: 1px;">{{ fund['y5msr'] | rating }}</span></td>
-            <td class="y5">{{ fund['y5r'] }} <br><span class="rank">{{ fund['y5rank'] | int }}/{{ fund['y5size'] | int }}</span></td>
+            <td class="y3">
+                {{ fund['y3risk'] }}<br><span style="font-size: 1px;">{{ fund['y3riskr'] | rating }}</span>
+            </td>
+            <td class="y3">
+                {{ fund['y3sharp'] | sharp }}<br><span style="font-size: 1px;">{{ fund['y3msr'] | rating }}</span>
+            </td>
+            <td class="y3">
+                {{ fund['y3r'] }} <br><span class="rank">{{ fund['y3rank'] | int }}/{{ fund['y3size'] | int }}</span>
+            </td>
             <td>{{ fund['m1r'] | val }}<br>{{ fund['m1c'] | updown }}</td>
-            <td>{{ fund['m3r'] | val }}</td>
-            <td>{{ fund['m6r'] | val }}</td>
-            <td>{{ fund['y1r'] | val }}<br><span class="rank">{{ fund['y1rank'] | int }}/{{ fund['y1size'] | int }}</span></td>
+            <td>{{ fund['m3r'] | val }}<br>{{ fund['m3c'] | updown }}</td>
+        </tr>
+        <tr>
+            <td class="y5 inline">{{ fund['y5std'] }}</td>
+            <td class="y5 inline">
+                {{ fund['y5risk'] }}<br><span style="font-size: 1px;">{{ fund['y5riskr'] | rating }}</span>
+            </td>
+            <td class="y5 inline">
+                {{ fund['y5sharp'] | sharp }}<br><span style="font-size: 1px;">{{ fund['y5msr'] | rating }}</span>
+            </td>
+            <td class="y5 inline">
+                {{ fund['y5r'] }} <br><span class="rank">{{ fund['y5rank'] | int }}/{{ fund['y5size'] | int }}</span>
+            </td>
+            <td class="inline">{{ fund['m6r'] | val }}<br>{{ fund['m6c'] | updown }}</td>
+            <td class="inline">{{ fund['y1r'] | val }}<br><span class="rank">{{ fund['y1rank'] | int }}/{{ fund['y1size'] | int }}</span></td>
         </tr>
         {% endfor %}
     </tbody>

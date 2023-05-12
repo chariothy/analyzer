@@ -1,0 +1,181 @@
+<style>
+    table { border-collapse: collapse; margin: 3px}
+    td.cat { background-color: #7fff00;}
+    tr.date { background-color: #fff8dc;}
+    td { border: 1px solid #999; padding: 5px;}
+    table thead {
+        background-color: #CCE8EB;
+        font-weight: bold;
+    }
+    td.score { background-color: #fff8dc; }
+    td.y3 { background-color: #fffaf0; }
+    td.y5 { background-color: #fffacd; }
+    td.y10 { background-color: #e0ffff; }
+    td.alpha { background-color: #98fb98; }
+    td.beta { background-color: #d8bfd8 }
+    td.r2 { background-color: #f0f8ff; }
+    td.inline { border-top: dotted; }
+    thead td { text-align: center; }
+    span.top-stock { color:blue;}
+    span.rank { color:blue;}
+    span.industry { color:brown;}
+    span.stock-ratio { color:red;}
+    span.top-bond { color:brown;}
+</style>
+<table>    
+    <thead>
+        <tr>
+            <td colspan="4" class="cat">基金经理变动</td>
+        </tr>
+        <tr>
+            <td>代码</td>
+            <td class="name">名称</td>
+            <td>上期基金经理</td>
+            <td>本期基金经理</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, fund in manager_change_df.iterrows() %}
+        <tr>
+            <td>
+                <a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a>
+            </td>
+            <td>
+                <a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a>
+                <br>
+                {{ fund['return_date'].strftime('%Y-%m-%d') }}
+            </td>
+            <td>{{ fund['pre_manager'] | split }}</td>
+            <td>{{ fund['manager_desc'] | split }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <thead>
+        <tr>
+            <td colspan="5" class="cat">基金净值上升</td>
+        </tr>
+        <tr>
+            <td>代码</td>
+            <td class="name">名称</td>
+            <td>上期净值</td>
+            <td>本期净值</td>
+            <td>变动%</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, fund in npv_inc_df.iterrows() %}
+        <tr>
+            <td>
+                <a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a>
+                <br>
+                {{ fund['manager_desc'] | split }}
+            </td>
+            <td>
+                <a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a>
+                <br>
+                {{ fund['return_date'].strftime('%Y-%m-%d') }}
+            </td>
+            <td>{{ fund['pre_npv'] }}</td>
+            <td>{{ fund['npv'] }}</td>
+            <td>{{ fund['npv_change'] }}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <thead>
+        <tr>
+            <td colspan="5" class="cat">基金净值下降</td>
+        </tr>
+        <tr>
+            <td>代码</td>
+            <td class="name">名称</td>
+            <td>上期净值</td>
+            <td>本期净值</td>
+            <td>变动%</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, fund in npv_dec_df.iterrows() %}
+        <tr>
+            <td>
+                <a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a>
+                <br>
+                {{ fund['manager_desc'] | split }}
+            </td>
+            <td>
+                <a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a>
+                <br>
+                {{ fund['return_date'].strftime('%Y-%m-%d') }}
+            </td>
+            <td>{{ fund['pre_npv'] }}</td>
+            <td>{{ fund['npv'] }}</td>
+            <td>{{ fund['npv_change'] }}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% if asset_inc_df.code.count() >0 %}
+    <thead>
+        <tr>
+            <td colspan="5" class="cat">基金规模上升</td>
+        </tr>
+        <tr>
+            <td>代码</td>
+            <td class="name">名称</td>
+            <td>上期规模</td>
+            <td>本期规模</td>
+            <td>变动%</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, fund in asset_inc_df.iterrows() %}
+        <tr>
+            <td>
+                <a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a>
+                <br>
+                {{ fund['manager_desc'] | split }}
+            </td>
+            <td>
+                <a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a>
+                <br>
+                {{ fund['return_date'].strftime('%Y-%m-%d') }}
+            </td>
+            <td>{{ fund['pre_asset'] }}亿</td>
+            <td>{{ fund['asset'] }}亿</td>
+            <td>{{ fund['asset_change'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% endif %}
+    {% if asset_inc_df.code.count() >0 %}
+    <thead>
+        <tr>
+            <td colspan="5" class="cat">基金规模下降</td>
+        </tr>
+        <tr>
+            <td>代码</td>
+            <td class="name">名称</td>
+            <td>上期规模</td>
+            <td>本期规模</td>
+            <td>变动%</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, fund in asset_dec_df.iterrows() %}
+        <tr>
+            <td>
+                <a href="http://fund.eastmoney.com/{{fund['code']}}.html">{{ fund['code'] }}</a>
+                <br>
+                {{ fund['manager_desc'] | split }}
+            </td>
+            <td>
+                <a href="http://www.morningstar.cn/quicktake/{{fund['class_id']}}">{%- if fund['favorite']==1 -%} * {% endif %} {{ fund['fund_name'] }}</a>
+                <br>
+                {{ fund['return_date'].strftime('%Y-%m-%d') }}
+            </td>
+            <td>{{ fund['pre_asset'] }}亿</td>
+            <td>{{ fund['asset'] }}亿</td>
+            <td>{{ fund['asset_change'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% endif %}
+</table>

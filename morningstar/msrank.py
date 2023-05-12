@@ -46,8 +46,12 @@ SELECT code, name AS fund_name, cat_name, banchmark, class_id, reg_date, favorit
 , y3_risk_rating AS y3riskr, y5_risk_rating AS y5riskr
 , y3_ms_rating AS y3msr, y5_ms_rating AS y5msr, y3_ms_risk AS y3risk, y5_ms_risk AS y5risk
 , y3_std AS y3std, y5_std AS y5std, y3_sharp AS y3sharp, y5_sharp AS y5sharp, rating_date
-, nm1_return AS m1r, nm1_cat as m1c, m3_return AS m3r, m6_return AS m6r, ytd_return AS ytdr, y2_return AS y2r
+, m1_return AS m1r, m1_return_cat as m1c, m1_return_idx as m1i
+, m3_return AS m3r, m3_return_cat as m3c, m3_return_idx as m3i
+, m6_return AS m6r, m6_return_cat as m6c, m6_return_idx as m6i
+, ytd_return AS ytdr, ytd_cat_size AS ytdsize, ytd_cat_rank AS ytdrank
 , y1_return AS y1r, y1_cat_size AS y1size, y1_cat_rank AS y1rank
+, y2_return AS y2r, y2_cat_size AS y2size, y2_cat_rank AS y2rank
 , y3_return AS y3r, y3_cat_size AS y3size, y3_cat_rank AS y3rank
 , y5_return AS y5r, y5_cat_size AS y5size, y5_cat_rank AS y5rank, return_date
 , npv, asset, cash_p AS cash, stock_p AS stock, bond_p AS bond, other_p AS other
@@ -131,8 +135,8 @@ def rank_fund(df:DataFrame):
     top_funds = []
     rank_conditions = dict(
         fee = dict(asc=True, weight=0.1),
-        asset = dict(asc=True, weight=0.1),
-        m6r = dict(asc=False, weight=0.6),
+        asset = dict(asc=True, weight=0.3),
+        m3r = dict(asc=False, weight=0.6),
         y5std = dict(asc=True, weight=0.8),
         y5sharp = dict(asc=False, weight=1)
     )
@@ -140,6 +144,7 @@ def rank_fund(df:DataFrame):
         cat_df = df[df.cat_name==cat_name].copy()
         cat_df = cat_df.sort_values(by=['return_date'], ascending=False)
         last_ret_date = cat_df.iloc[0].return_date.to_pydatetime()
+        # 去除近两个月未纳入爬虫的基金
         min_ret_date = last_ret_date - timedelta(days=61)
         cat_df = cat_df[cat_df.return_date >= min_ret_date]
         #cat_df.return_date.describe()
@@ -158,9 +163,10 @@ def rank_fund(df:DataFrame):
     return all_top_funds
 
 
-def report_top_fund():
-    top_fund_df = query_fund()
-    rank_fund_df = rank_fund(top_fund_df)
+def report_top_fund(rank_fund_df: DataFrame=None):
+    if rank_fund_df is None:
+        top_fund_df = query_fund()
+        rank_fund_df = rank_fund(top_fund_df)
     types = ['stock', 'bond']
     for type in types:
         if type == 'stock':
@@ -178,9 +184,19 @@ def report_top_fund():
         )
         template = tmp_env.get_template('msrank.html')
         html = template.render({'data': data})
-        html = transform(html)
         if au.is_prod():
-            au.send_email(title, html_body=html, to_addrs=au['report_to'])
+            au.send_email(title, html_body=transform(html), to_addrs=au['report_to'])
+            html_path = path.join('/www',f'fund-latest-{type}.html')
+            whole_html = f'''<!DOCTYPE html>
+<html>
+<head> 
+<meta charset="utf-8"> 
+<title>{type}</title>
+</head>
+{html}
+</html>'''
+            with open(html_path, mode='w') as f:
+                f.write(whole_html)
         else:
             html_path = path.join(path.dirname(path.dirname(__file__)),'logs',f'fund-{pu.today()}-{type}.html')
             with open(html_path, mode='w') as f:

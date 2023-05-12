@@ -5,6 +5,7 @@ services:
     container_name: ana-msrank
     volumes:
       - /www/analyzer:/app
+      - /www/public:/www
     logging:
       options:
         max-size: "10m"
@@ -20,6 +21,27 @@ services:
     networks:
       - ana
     command: python main.py report_top_fund
+  mschange:
+    build: .
+    container_name: ana-mschange
+    volumes:
+      - /www/analyzer:/app
+      - /www/public:/www
+    logging:
+      options:
+        max-size: "10m"
+    working_dir: /app
+    environment:
+      - ENV=${ENV}
+      - MSCHANGE_SMTP_PWD=${SMTP_PWD}
+      - MSCHANGE_DINGTALK_TOKEN=${DINGTALK_TOKEN}
+      - MSCHANGE_DINGTALK_SECRET=${DINGTALK_SECRET}
+      - MSCHANGE_MYSQL_USER=${MYSQL_USER}
+      - MSCHANGE_MYSQL_DB=${MYSQL_DB}
+      - MSCHANGE_MYSQL_PWD=${MYSQL_PWD}
+    networks:
+      - ana
+    command: python main.py report_change
 
 networks: 
   ana:
