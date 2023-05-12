@@ -176,7 +176,7 @@ def report_top_fund(rank_fund_df: DataFrame=None):
             rank_fund_df_type = rank_fund_df[rank_fund_df.stock <= rank_fund_df.bond]
             title = f'最新TOP{TOP}偏债型及其他基金报告({au.env()})'
         if not au.is_prod():
-            au.D(rank_fund_df_type)
+            au.debug(rank_fund_df_type)
         rank_fund_group_df = rank_fund_df_type.groupby(['cat_name', 'banchmark'])
         #au.D(rank_fund_group_df.groups.keys())
         data = dict(

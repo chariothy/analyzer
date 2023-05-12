@@ -127,7 +127,7 @@ def report_change(change_df: DataFrame=None):
             fund_df_type = change_df[change_df.stock <= change_df.bond]
             title = f'最新偏债型及其他基金变动报告({au.env()})'
         if not au.is_prod():
-            au.D(fund_df_type)
+            au.debug(fund_df_type)
         template = tmp_env.get_template('mschange.html')
         html = template.render(dict(
             npv_inc_df = top_npv_change(fund_df_type, False),
