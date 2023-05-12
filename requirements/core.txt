@@ -1,7 +1,7 @@
 pandas
 jinja2
 premailer
-pybeans>=1.7.0
+pybeans>=1.8.0
 sqlalchemy==1.4.43
 mysql-connector-python
 fire
